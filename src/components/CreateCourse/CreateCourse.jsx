@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 
+import { v4 as uuidv4 } from 'uuid';
+
 import Button from '../../common/Button/Button';
 import Input from '../../common/Input/Input';
 import { TextArea } from '../../common/Input/TextArea';
@@ -31,22 +33,26 @@ import {
 } from '../../contants';
 
 import { mockedAuthorsList, mockedCoursesList } from '../../helpers/mockedData';
-import Author from '../../helpers/models/authorModel';
-import Course from '../../helpers/models/courseModel';
+// import { dataRefactor } from '../../helpers/dateGenerator';
+// import Author from '../../helpers/models/authorModel';
+// import Course from '../../helpers/models/courseModel';
+
+console.log(mockedAuthorsList);
 
 export const CreateCourse = () => {
 	const [titleVaule, setTitleValue] = useState('');
 	const [descriptionValue, setDescriptionValue] = useState('');
 	const [authorsValue, setAuthorsValue] = useState([]);
+	const [creationDate, setCreationDate] = useState('');
 	const [durationValue, setDurationValue] = useState(0);
 	const [newAuthorValue, setNewAuthorValue] = useState('');
 
 	const [authorList, setAuthorList] = useState(mockedAuthorsList);
 	const [coursesList, setCoursesList] = useState(mockedCoursesList);
 
-	const availableAuthors = authorList.filter((author) => {
-		return !authorsValue.some((auth) => auth === author.id);
-	});
+	// const availableAuthors = authorList.filter((author) => {
+	// 	return !authorsValue.some((auth) => auth === author.id);
+	// });
 	const mapedAuthors = mockedAuthorsList.map((item) => {
 		return (
 			<div key={item.id} className='createCourseRightAuthors'>
@@ -54,7 +60,7 @@ export const CreateCourse = () => {
 				<Button
 					buttonText={'Add author'}
 					className='createCourseRightButtons'
-					onClick={handleSelectedAuthors}
+					onClick={addCourseAuthor}
 				/>
 			</div>
 		);
@@ -65,10 +71,10 @@ export const CreateCourse = () => {
 			return acc;
 		}, []);
 	}
-	const selectedAuthors = getAuthorsById(authorsValue);
+	// const selectedAuthors = getAuthorsById(authorsValue);
 
 	return (
-		<form onSubmit={onSubmit}>
+		<form>
 			<fieldset className='borderNone'>
 				<div className='createCourseTitleSection'>
 					<div className='createCourseTitleSectionInput'>
@@ -113,7 +119,7 @@ export const CreateCourse = () => {
 						/>
 						<Button
 							buttonText={createCourseAddAuthorNameButton}
-							onClick={createAuthor}
+							onClick={addAuthor}
 						/>
 					</div>
 					<div>
@@ -143,11 +149,11 @@ export const CreateCourse = () => {
 							{authorsValue.map((item) => {
 								return (
 									<div key={item.id} className='createCourseRightAuthors'>
-										<p>{selectedAuthors(item.name)}</p>
+										<p>{item.name}</p>
 										<Button
 											buttonText={'Delete author'}
 											className='createCourseRightButtons'
-											onClick={handleAvaliableAuthors}
+											onClick={deleteCourseAuthor}
 										/>
 									</div>
 								);
@@ -159,36 +165,83 @@ export const CreateCourse = () => {
 		</form>
 	);
 
-	function handleSelectedAuthors(author) {
-		setAuthorsValue(authorsValue.filter((auth) => auth !== author.id));
-	}
-
-	function handleAvaliableAuthors(author) {
-		setAuthorsValue([...authorList, author.id]);
-	}
-	function onSubmit(e) {
+	function addAuthor(e) {
 		e.preventDefault();
-		const courseData = [
-			titleVaule,
-			descriptionValue,
-			durationValue,
-			authorsValue,
-		];
-		const isDataValid = courseData.every((i) => i.length);
-
-		if (isDataValid) {
-			setCoursesList([...coursesList, new Course(...courseData)]);
-		} else {
-			alert('Please make shure all fields are valid');
-		}
-	}
-
-	function createAuthor() {
-		if (!newAuthorValue) {
-			setNewAuthorValue('');
+		if (newAuthorValue.length < 2) {
+			alert('Input should be more than 2 char');
 			return;
+		} else {
+			let newAuthor = { id: uuidv4(), name: newAuthorValue };
+			setAuthorList([newAuthor, ...authorList]);
+			setNewAuthorValue('');
+			mockedAuthorsList.push(newAuthor);
+			console.log(mockedAuthorsList);
 		}
-		setAuthorList([...authorList, new Author(newAuthorValue)]);
-		setNewAuthorValue('');
 	}
+	// function handleSubmit(e) {
+	//     e.preventDefault()
+	//     if(titleVaule === '' || descriptionValue === '' || durationValue === 0) {
+	//         alert('Please make sure all inputs are valid')
+	//     }
+
+	// }
+	function createCourse(e) {
+		let newCourse = {
+			id: uuidv4(),
+			title: titleVaule,
+			description: descriptionValue,
+			creatianDate: creationDate,
+			duration: durationValue,
+			authors: authorsValue.map((course) => {
+				return course.id;
+			}),
+		};
+		mockedCoursesList.push(newCourse);
+	}
+	function addCourseAuthor(newCourseAuthor, e) {
+		debugger;
+		e.preventDefault();
+		setAuthorsValue([newCourseAuthor, ...authorsValue]);
+		setAuthorList((prev) => {
+			prev.filter((i) => i.id !== newCourseAuthor.id);
+		});
+		console.log(authorsValue);
+	}
+	function deleteCourseAuthor(newCourseAuthor) {
+		setAuthorList([newCourseAuthor, ...authorsValue]);
+		setAuthorList((prev) => {
+			prev.filter((i) => i.id !== authorsValue.id);
+		});
+	}
+	// function handleSelectedAuthors(author) {
+	// 	setAuthorsValue(authorsValue.filter((auth) => auth !== author.id));
+	// }
+
+	// function handleAvaliableAuthors(author) {
+	// 	setAuthorsValue([...authorList, author.id]);
+	// }
+	// function onSubmit() {
+	// 	const courseData = [
+	// 		titleVaule,
+	// 		descriptionValue,
+	// 		durationValue,
+	// 		authorsValue,
+	// 	];
+	// 	const isDataValid = courseData.every((i) => i.length);
+
+	// 	if (isDataValid) {
+	// 		setCoursesList([...coursesList, new Course(...courseData)]);
+	// 	} else {
+	// 		alert('Please make shure all fields are valid');
+	// 	}
+	// }
+
+	// function createAuthor() {
+	// 	if (!newAuthorValue) {
+	// 		setNewAuthorValue('');
+	// 		return;
+	// 	}
+	// 	setAuthorList([...authorList, new Author(newAuthorValue)]);
+	// 	setNewAuthorValue('');
+	// }
 };
