@@ -28,7 +28,6 @@ import {
 	createCourseAddAuthorNameButton,
 	createCourseDurationH3,
 	createCourseDurationLabelAndInputId,
-	createCourseNumberType,
 	createCourseDurationPlaceHolder,
 	createCourseAuthorListH3,
 	createCourseDescriptionLabel,
