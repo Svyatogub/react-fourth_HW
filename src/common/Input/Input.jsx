@@ -34,7 +34,6 @@ Input.propTypes = {
 	labelText: PropTypes.string,
 	placeholderText: PropTypes.string,
 	onChange: PropTypes.func,
-	inputValue: PropTypes.string,
 	onBlur: PropTypes.func,
 };
 

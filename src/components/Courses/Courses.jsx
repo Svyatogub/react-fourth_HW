@@ -12,7 +12,7 @@ import { mockedAuthorsList, mockedCoursesList } from '../../helpers/mockedData';
 
 import { dataRefactor } from '../../helpers/dateGenerator';
 import { refactorDuration } from '../../helpers/pipeDuration';
-import { CreateCourse } from '../CreateCourse/CreateCourse';
+// import { CreateCourse } from '../CreateCourse/CreateCourse';
 
 const mapAuthorsFromCourse = (c) =>
 	c.authors
@@ -21,13 +21,13 @@ const mapAuthorsFromCourse = (c) =>
 		.map((ca) => ca.name)
 		.join(', ');
 
-const Courses = () => {
-	const [createAuthorClicked, setCreateAuthorClicked] = useState(true);
+const Courses = (props) => {
+	// const [createAuthorClicked, setCreateAuthorClicked] = useState(true);
 	const [searchedCourses, setSearchedCourses] = useState(mockedCoursesList);
 
-	const createAuthorComponentClick = () => {
-		setCreateAuthorClicked((current) => !current);
-	};
+	// const createAuthorComponentClick = () => {
+	// 	setCreateAuthorClicked((current) => !current);
+	// };
 	const mapedList = () => {
 		return (
 			<>
@@ -36,7 +36,7 @@ const Courses = () => {
 					<div className='coursesAddButton'>
 						<Button
 							buttonText={coursesButtonText}
-							onClick={createAuthorComponentClick}
+							onClick={props.hendleDifferentRender}
 						/>
 					</div>
 				</div>
@@ -56,11 +56,7 @@ const Courses = () => {
 			</>
 		);
 	};
-	return (
-		<div className='courses'>
-			{createAuthorClicked ? mapedList() : <CreateCourse />}
-		</div>
-	);
+	return <div className='courses'>{mapedList()}</div>;
 
 	function findCourse(searchValue) {
 		const searchResult = mockedCoursesList.filter((list) => {
