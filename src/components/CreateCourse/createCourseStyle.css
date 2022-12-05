@@ -1,0 +1,52 @@
+.createCourseBox {
+    border: 1px solid black;
+    margin: 10px;
+    display: flex;
+    justify-content: space-between;
+}
+.createCourseLeft {
+    display: flex;
+    flex-direction: column;
+}
+.createCourseLeft div {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 20px 60px;
+}
+.createCourseRight {
+    display: flex;
+    flex-direction: column;
+    margin: 20px 60px;
+    align-items: center;
+    text-align: center;
+}
+.createCourseRightAuthors {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-right: 20px;
+}
+.createCourseRightButtons {
+    margin-left: 50px;
+}
+.createCourseTextArea {
+    margin-top: 10px;
+}
+.createCourseTitleSection {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 20px;
+}
+.createCourseTitleSectionInput div{
+    display: flex;
+    flex-direction: column;
+}
+.createCourseTitleSectionInput div label{
+    margin-bottom: 5px;
+}
+.borderNone {
+    border: none;
+}

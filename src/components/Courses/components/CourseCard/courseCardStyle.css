@@ -1,0 +1,28 @@
+.cardBox {
+    border: 1px solid green;
+    display: flex;
+    flex-direction: row; 
+    margin: 10px;
+    gap: 100px;
+}
+.cardText {
+    display: flex;
+    flex-direction: column;
+    width: 70%;
+    margin: 10px;
+}
+.cardText p {
+    font-size: 18px;
+}
+.cardInfo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 10px;
+}
+.cardInfo div{
+    width: 100%;
+    display: flex;
+    align-items: center;
+}

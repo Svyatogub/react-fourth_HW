@@ -1,0 +1,21 @@
+.header {
+    display: flex;
+    flex-direction: row;
+    border: 1px solid red;
+    margin: 10px 10px;
+    justify-content: space-between;
+}
+.headerImg {
+    margin-left: 20px;
+    margin-top: 5px;
+}
+.headerRight {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    margin-right: 20px;
+}
+.header div p {
+    margin-right: 40px;
+}

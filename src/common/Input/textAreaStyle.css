@@ -1,0 +1,9 @@
+.textArea {
+    margin: 20px;
+}
+.textArea textarea{
+    width: 99%;
+    margin-top: 5px;
+    height: 100px;
+    border: 1px solid #e3e039;
+}

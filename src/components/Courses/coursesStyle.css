@@ -1,0 +1,13 @@
+.courses {
+    border: 1px solid green;
+    margin: 10px;
+}
+
+.coursesTop {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+.coursesAddButton {
+    margin: 10px;
+}
