@@ -19,7 +19,6 @@ function App() {
 			) : (
 				<CreateCourse hendleDifferentRender={differentRender} />
 			)}
-			{/* <Courses /> */}
 		</div>
 	);
 }

@@ -12,7 +12,6 @@ import { mockedAuthorsList, mockedCoursesList } from '../../helpers/mockedData';
 
 import { dataRefactor } from '../../helpers/dateGenerator';
 import { refactorDuration } from '../../helpers/pipeDuration';
-// import { CreateCourse } from '../CreateCourse/CreateCourse';
 
 const mapAuthorsFromCourse = (c) =>
 	c.authors
@@ -22,12 +21,8 @@ const mapAuthorsFromCourse = (c) =>
 		.join(', ');
 
 const Courses = (props) => {
-	// const [createAuthorClicked, setCreateAuthorClicked] = useState(true);
 	const [searchedCourses, setSearchedCourses] = useState(mockedCoursesList);
 
-	// const createAuthorComponentClick = () => {
-	// 	setCreateAuthorClicked((current) => !current);
-	// };
 	const mapedList = () => {
 		return (
 			<>

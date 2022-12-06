@@ -44,7 +44,6 @@ export const CreateCourse = (props) => {
 	const [newAuthorValue, setNewAuthorValue] = useState('');
 
 	const [authorList, setAuthorList] = useState(mockedAuthorsList);
-	// const [coursesList, setCoursesList] = useState(mockedCoursesList);
 
 	const mapedAuthors = authorList.map((item) => {
 		return (
