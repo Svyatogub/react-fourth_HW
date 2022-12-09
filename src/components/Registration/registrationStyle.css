@@ -1,0 +1,23 @@
+.registrationBox {
+    border: 1px solid blue;
+    height: 80vh;
+    margin: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: -10px;
+}
+.registrationInput {
+    margin: 15px 0px;
+    border: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+.registrationInput div {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+}

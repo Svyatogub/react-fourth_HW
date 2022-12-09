@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import Button from '../../common/Button/Button';
 import { CourseCard } from './components/CourseCard/CourseCard';
@@ -22,17 +23,17 @@ const mapAuthorsFromCourse = (c) =>
 
 const Courses = (props) => {
 	const [searchedCourses, setSearchedCourses] = useState(mockedCoursesList);
-
+	const navigate = useNavigate();
+	function toAddCourses() {
+		navigate('/courses/add');
+	}
 	const mapedList = () => {
 		return (
 			<>
 				<div className='coursesTop'>
 					<SearchBar findCourse={findCourse} resetCourses={resetCourses} />
 					<div className='coursesAddButton'>
-						<Button
-							buttonText={coursesButtonText}
-							onClick={props.hendleDifferentRender}
-						/>
+						<Button buttonText={coursesButtonText} onClick={toAddCourses} />
 					</div>
 				</div>
 				{searchedCourses.map((list) => {
@@ -45,8 +46,12 @@ const Courses = (props) => {
 							Authors={mapAuthorsFromCourse(list)}
 							Duration={refactorDuration(list.duration)}
 							CreationDate={dataRefactor(list.creationDate)}
+							ButtonClick={toShowCourse}
 						/>
 					);
+					function toShowCourse() {
+						navigate(`${list.id}`);
+					}
 				})}
 			</>
 		);

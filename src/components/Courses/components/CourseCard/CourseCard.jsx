@@ -11,6 +11,7 @@ export const CourseCard = ({
 	Description,
 	Authors,
 	Id,
+	ButtonClick,
 }) => {
 	return (
 		<div className='cardBox'>
@@ -31,7 +32,7 @@ export const CourseCard = ({
 					<h4>Created:</h4>
 					<p>{CreationDate}</p>
 				</div>
-				<Button buttonText={'Show course'} />
+				<Button buttonText={'Show course'} onClick={ButtonClick} />
 			</div>
 		</div>
 	);

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-
+import { useNavigate } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 
 import { mockedAuthorsList, mockedCoursesList } from '../../helpers/mockedData';
@@ -45,6 +45,8 @@ export const CreateCourse = (props) => {
 
 	const [authorList, setAuthorList] = useState(mockedAuthorsList);
 
+	const navigate = useNavigate();
+
 	const mapedAuthors = authorList.map((item) => {
 		return (
 			<div key={item.id} className='createCourseRightAuthors'>
@@ -58,7 +60,7 @@ export const CreateCourse = (props) => {
 		);
 	});
 	return (
-		<div>
+		<div className='createCourseBlock'>
 			<form onSubmit={handleSubmit}>
 				<fieldset className='borderNone'>
 					<div className='createCourseTitleSection'>
@@ -191,6 +193,7 @@ export const CreateCourse = (props) => {
 		}
 		createCourse();
 		console.log(mockedCoursesList);
+		navigate('/courses');
 	}
 	function addCourseAuthor(item) {
 		let newCourseAuthor = authorList.find((i) => {

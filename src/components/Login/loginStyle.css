@@ -1,0 +1,22 @@
+.loginBox {
+    border: 1px solid blue;
+    height: 80vh;
+    margin: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: -10px;
+}
+.loginInput {
+    border: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+.loginInput div {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+}

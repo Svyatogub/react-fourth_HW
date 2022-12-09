@@ -1,0 +1,42 @@
+.courseInfoBox {
+    border: 1px solid blue;
+    margin: 10px;
+}
+.backToCoursesDiv {
+    margin: 15px 0px 0px 30px;
+}
+.backToCoursesLink {
+    text-decoration: none;
+    color: black;
+}
+.courseTitle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.courseInfomationBlock {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+.courseInfomationBlockLeft {
+    width: 50vw;
+    margin: 10px;
+}
+.courseInfomationBlockLeft p {
+    font-size: 20px;
+}
+.courseInfomationBlockRight {
+    display: flex;
+    flex-direction: column;
+    width: 30vw;
+}
+.courseInfomationBlockRight div {
+    display: flex;
+    flex-direction: row;
+}
+.courseInfomationBlockRight div p:first-child {
+    font-weight: bold;
+    margin-right: 10px;
+}

@@ -13,6 +13,7 @@ const Input = ({
 	inputType,
 	inputId,
 	inputValue,
+	minLength,
 }) => {
 	return (
 		<div>
@@ -25,6 +26,7 @@ const Input = ({
 				onBlur={onBlur}
 				className='searchBarInput'
 				value={inputValue}
+				min={minLength}
 			/>
 		</div>
 	);

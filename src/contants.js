@@ -32,3 +32,5 @@ export const createCourseDurationPlaceHolder = 'Enter Duration in minutes...';
 export const createCourseAuthorListH3 = 'Authors';
 
 export const createCourseCourseAuthorsH3 = 'CourseAuthors';
+
+export const backToCoursesText = '< Back to courses';
