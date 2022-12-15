@@ -1,8 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 import { v4 as uuidv4 } from 'uuid';
-
-import { mockedAuthorsList, mockedCoursesList } from '../../helpers/mockedData';
 
 import Button from '../../common/Button/Button';
 import Input from '../../common/Input/Input';
@@ -12,6 +11,10 @@ import './createCourseStyle.css';
 
 import { refactorDuration } from '../../helpers/pipeDuration';
 import { getCreationDate } from '../../helpers/dateGenerator';
+import { getAllAuthors } from '../../services';
+import { CREATE_AUTHOR } from '../../store/authors/actionTypes';
+import { CREATE_COURSE } from '../../store/courses/actionTypes';
+import { store } from '../../store';
 
 import {
 	createCourseTextInput,
@@ -34,8 +37,6 @@ import {
 	createCourseCourseAuthorsH3,
 } from '../../contants';
 
-console.log(mockedCoursesList);
-
 export const CreateCourse = (props) => {
 	const [titleVaule, setTitleValue] = useState('');
 	const [descriptionValue, setDescriptionValue] = useState('');
@@ -43,8 +44,17 @@ export const CreateCourse = (props) => {
 	const [durationValue, setDurationValue] = useState(0);
 	const [newAuthorValue, setNewAuthorValue] = useState('');
 
-	const [authorList, setAuthorList] = useState(mockedAuthorsList);
+	const courses = useSelector((state) => state.courses);
 
+	const authors = useSelector((state) => state.authors);
+	const [authorList, setAuthorList] = useState(authors);
+
+	useEffect(() => {
+		getAllAuthors();
+	}, []);
+	useEffect(() => {
+		setAuthorList(authors);
+	}, [authors]);
 	const navigate = useNavigate();
 
 	const mapedAuthors = authorList.map((item) => {
@@ -163,11 +173,9 @@ export const CreateCourse = (props) => {
 			alert('Input should be more than 2 char');
 			return;
 		} else {
-			let newAuthor = { id: uuidv4(), name: newAuthorValue };
-			setAuthorList([newAuthor, ...authorList]);
-			setNewAuthorValue('');
-			mockedAuthorsList.push(newAuthor);
-			console.log(mockedAuthorsList);
+			let newAuthor = { name: newAuthorValue, id: uuidv4() };
+			store.dispatch({ type: CREATE_AUTHOR, payload: newAuthor });
+			console.log(authors);
 		}
 	}
 
@@ -182,8 +190,8 @@ export const CreateCourse = (props) => {
 				return course.id;
 			}),
 		};
-		mockedCoursesList.push(newCourse);
-		props.hendleDifferentRender();
+		store.dispatch({ type: CREATE_COURSE, payload: newCourse });
+		console.log(courses);
 	}
 	function handleSubmit(e) {
 		e.preventDefault();
@@ -192,7 +200,6 @@ export const CreateCourse = (props) => {
 			return;
 		}
 		createCourse();
-		console.log(mockedCoursesList);
 		navigate('/courses');
 	}
 	function addCourseAuthor(item) {

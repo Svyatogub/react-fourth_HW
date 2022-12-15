@@ -1,6 +1,10 @@
 import React from 'react';
 
 import Button from '../../../../common/Button/Button';
+import {
+	ShowCourseChangeButton,
+	ShowCourseDeleteBtn,
+} from '../../../../common/Button/ShowCourseButton';
 
 import './courseCardStyle.css';
 
@@ -32,7 +36,11 @@ export const CourseCard = ({
 					<h4>Created:</h4>
 					<p>{CreationDate}</p>
 				</div>
-				<Button buttonText={'Show course'} onClick={ButtonClick} />
+				<div className='buttonsSection'>
+					<Button buttonText={'Show course'} onClick={ButtonClick} />
+					<ShowCourseChangeButton />
+					<ShowCourseDeleteBtn />
+				</div>
 			</div>
 		</div>
 	);

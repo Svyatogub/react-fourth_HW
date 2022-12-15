@@ -1,36 +1,34 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useSelector } from 'react-redux';
 import axios from 'axios';
 
 import Button from '../../common/Button/Button';
 import Input from '../../common/Input/Input';
 
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
+
+import { logInUser } from '../../services';
 
 import './loginStyle.css';
 
 export const Login = (props) => {
+	const userLogged = useSelector((state) => state.user.isAuth);
 	const [emailValue, setEmailValue] = useState('');
 	const [passwordValue, setPasswordValue] = useState('');
 
 	const navigate = useNavigate();
+	let location = useLocation();
 
 	function submitHandler(e) {
 		e.preventDefault();
-		axios
-			.post('http://localhost:4000/login', {
-				email: emailValue,
-				password: passwordValue,
-			})
-			.then((res) => {
-				console.log(res);
-				props.login(res);
-				navigate('/courses');
-			})
-			.catch((err) => {
-				console.log(err);
-				alert('oops, invalid password or email');
-			});
+		logInUser(emailValue, passwordValue);
 	}
+	useEffect(() => {
+		if (userLogged) {
+			navigate('/courses');
+			console.log(location);
+		}
+	}, [userLogged]);
 	return (
 		<div className='loginBox'>
 			<h1>Login</h1>

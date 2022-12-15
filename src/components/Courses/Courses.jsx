@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
 import Button from '../../common/Button/Button';
@@ -9,24 +10,34 @@ import './coursesStyle.css';
 
 import { coursesButtonText } from '../../contants';
 
-import { mockedAuthorsList, mockedCoursesList } from '../../helpers/mockedData';
-
 import { dataRefactor } from '../../helpers/dateGenerator';
 import { refactorDuration } from '../../helpers/pipeDuration';
+import { getAllAuthors, getAllCourses } from '../../services';
 
-const mapAuthorsFromCourse = (c) =>
+const mapAuthorsFromCourse = (c, authors) =>
 	c.authors
-		.map((ca) => mockedAuthorsList.find((a) => a.id === ca))
+		.map((ca) => authors.find((a) => a.id === ca))
 		.filter((ca) => ca)
 		.map((ca) => ca.name)
 		.join(', ');
 
 const Courses = (props) => {
-	const [searchedCourses, setSearchedCourses] = useState(mockedCoursesList);
+	const courses = useSelector((state) => state.courses);
+	const authors = useSelector((state) => state.authors);
+
+	const [searchedCourses, setSearchedCourses] = useState(courses);
 	const navigate = useNavigate();
 	function toAddCourses() {
 		navigate('/courses/add');
 	}
+	useEffect(() => {
+		getAllCourses();
+		getAllAuthors();
+	}, []);
+	useEffect(() => {
+		setSearchedCourses(courses);
+	}, [courses]);
+
 	const mapedList = () => {
 		return (
 			<>
@@ -43,7 +54,7 @@ const Courses = (props) => {
 							Id={list.id}
 							Title={list.title}
 							Description={list.description}
-							Authors={mapAuthorsFromCourse(list)}
+							Authors={mapAuthorsFromCourse(list, authors)}
 							Duration={refactorDuration(list.duration)}
 							CreationDate={dataRefactor(list.creationDate)}
 							ButtonClick={toShowCourse}
@@ -59,16 +70,16 @@ const Courses = (props) => {
 	return <div className='courses'>{mapedList()}</div>;
 
 	function findCourse(searchValue) {
-		const searchResult = mockedCoursesList.filter((list) => {
+		const searchResult = courses.filter((list) => {
 			const reg = new RegExp(searchValue, 'gi');
 			return list.title.match(reg) || list.id.match(reg);
 		});
 		searchResult.length !== 0
 			? setSearchedCourses(searchResult)
-			: setSearchedCourses(mockedCoursesList);
+			: setSearchedCourses(courses);
 	}
 	function resetCourses() {
-		setSearchedCourses(mockedCoursesList);
+		setSearchedCourses(courses);
 	}
 };
 

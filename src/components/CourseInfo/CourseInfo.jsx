@@ -1,9 +1,9 @@
 import React from 'react';
 import { useParams, Link } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 import { dataRefactor } from '../../helpers/dateGenerator';
 import { refactorDuration } from '../../helpers/pipeDuration';
-import { mockedAuthorsList, mockedCoursesList } from '../../helpers/mockedData';
 
 import './courseInfoStyle.css';
 
@@ -11,14 +11,16 @@ import { backToCoursesText } from '../../contants';
 
 export const CourseInfo = () => {
 	const { courseId } = useParams();
-	const course = mockedCoursesList.find((c) => {
+	const courses = useSelector((state) => state.courses);
+	const authors = useSelector((state) => state.authors);
+	const course = courses.find((c) => {
 		return c.id === courseId;
 	});
 	const courseCreationDate = dataRefactor(course.creationDate);
 	const courseDuration = refactorDuration(course.duration);
 	const mapAuthorsFromCourse = (c) =>
 		c.authors
-			.map((ca) => mockedAuthorsList.find((a) => a.id === ca))
+			.map((ca) => authors.find((a) => a.id === ca))
 			.filter((ca) => ca)
 			.map((ca) => ca.name)
 			.join(', ');
