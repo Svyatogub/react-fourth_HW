@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import axios from 'axios';
 
 import Button from '../../common/Button/Button';
 import Input from '../../common/Input/Input';
@@ -28,6 +27,7 @@ export const Login = (props) => {
 			navigate('/courses');
 			console.log(location);
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [userLogged]);
 	return (
 		<div className='loginBox'>
