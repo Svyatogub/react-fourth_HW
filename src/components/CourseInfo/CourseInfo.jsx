@@ -8,11 +8,12 @@ import { refactorDuration } from '../../helpers/pipeDuration';
 import './courseInfoStyle.css';
 
 import { backToCoursesText } from '../../contants';
+import { getAuthors, getCourses } from '../../selectors';
 
 export const CourseInfo = () => {
 	const { courseId } = useParams();
-	const courses = useSelector((state) => state.courses);
-	const authors = useSelector((state) => state.authors);
+	const courses = useSelector(getCourses);
+	const authors = useSelector(getAuthors);
 	const course = courses.find((c) => {
 		return c.id === courseId;
 	});

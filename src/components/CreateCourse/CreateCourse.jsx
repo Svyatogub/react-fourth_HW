@@ -11,9 +11,7 @@ import './createCourseStyle.css';
 
 import { refactorDuration } from '../../helpers/pipeDuration';
 import { getCreationDate } from '../../helpers/dateGenerator';
-import { getAllAuthors } from '../../services';
 import { CREATE_AUTHOR } from '../../store/authors/actionTypes';
-import { CREATE_COURSE } from '../../store/courses/actionTypes';
 import { store } from '../../store';
 
 import {
@@ -36,6 +34,8 @@ import {
 	createCourseDescriptionLabel,
 	createCourseCourseAuthorsH3,
 } from '../../contants';
+import { createCourseAction } from '../../store/courses/actionCreators';
+import { getAuthors, getCourses } from '../../selectors';
 
 export const CreateCourse = (props) => {
 	const [titleVaule, setTitleValue] = useState('');
@@ -44,14 +44,13 @@ export const CreateCourse = (props) => {
 	const [durationValue, setDurationValue] = useState(0);
 	const [newAuthorValue, setNewAuthorValue] = useState('');
 
-	const courses = useSelector((state) => state.courses);
-
-	const authors = useSelector((state) => state.authors);
+	const courses = useSelector(getCourses);
+	const authors = useSelector(getAuthors);
 	const [authorList, setAuthorList] = useState(authors);
 
-	useEffect(() => {
-		getAllAuthors();
-	}, []);
+	// useEffect(() => {
+	// 	getAllAuthors();
+	// }, []);
 	useEffect(() => {
 		setAuthorList(authors);
 	}, [authors]);
@@ -181,16 +180,16 @@ export const CreateCourse = (props) => {
 
 	function createCourse() {
 		let newCourse = {
-			id: uuidv4(),
 			title: titleVaule,
 			description: descriptionValue,
 			creationDate: getCreationDate(),
-			duration: durationValue,
+			duration: Number(durationValue),
 			authors: authorsValue.map((course) => {
 				return course.id;
 			}),
+			id: uuidv4(),
 		};
-		store.dispatch({ type: CREATE_COURSE, payload: newCourse });
+		store.dispatch(createCourseAction(newCourse));
 		console.log(courses);
 	}
 	function handleSubmit(e) {

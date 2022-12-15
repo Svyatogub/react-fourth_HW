@@ -16,6 +16,7 @@ export const CourseCard = ({
 	Authors,
 	Id,
 	ButtonClick,
+	onDelete,
 }) => {
 	return (
 		<div className='cardBox'>
@@ -39,7 +40,7 @@ export const CourseCard = ({
 				<div className='buttonsSection'>
 					<Button buttonText={'Show course'} onClick={ButtonClick} />
 					<ShowCourseChangeButton />
-					<ShowCourseDeleteBtn />
+					<ShowCourseDeleteBtn onClick={onDelete} />
 				</div>
 			</div>
 		</div>

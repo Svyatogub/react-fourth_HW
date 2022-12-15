@@ -14,6 +14,7 @@ import { CourseInfo } from './components/CourseInfo/CourseInfo';
 import { LOGIN_USER } from './store/users/actionTypes';
 
 import { store } from './store';
+import { getAllAuthors, getAllCourses } from './services';
 
 function App() {
 	const [isLogged, setIsLogged] = useState(false);
@@ -24,7 +25,8 @@ function App() {
 
 	useEffect(() => {
 		tryToLogIn();
-		console.log(isLogged);
+		getAllCourses();
+		getAllAuthors();
 	}, []);
 	useEffect(() => {
 		if (user.isAuth) {
@@ -32,12 +34,12 @@ function App() {
 		} else {
 			logOutHandler();
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [user]);
 	function logInHandler() {
 		localStorage.setItem('user', JSON.stringify(user));
 		setIsLogged(true);
 		navigate('/courses');
-		console.log(isLogged);
 	}
 	function logOutHandler() {
 		localStorage.removeItem('user');
