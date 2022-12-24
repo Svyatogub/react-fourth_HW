@@ -34,10 +34,11 @@ import {
 	createCourseDescriptionLabel,
 	createCourseCourseAuthorsH3,
 } from '../../contants';
-import { createCourseAction } from '../../store/courses/actionCreators';
-import { getAuthors, getCourses } from '../../selectors';
 
-export const CreateCourse = (props) => {
+import { getAuthors, getCourses } from '../../selectors';
+import { createNewCourse } from '../../store/courses/thunk';
+
+export const CourseForm = (props) => {
 	const [titleVaule, setTitleValue] = useState('');
 	const [descriptionValue, setDescriptionValue] = useState('');
 	const [authorsValue, setAuthorsValue] = useState([]);
@@ -48,9 +49,6 @@ export const CreateCourse = (props) => {
 	const authors = useSelector(getAuthors);
 	const [authorList, setAuthorList] = useState(authors);
 
-	// useEffect(() => {
-	// 	getAllAuthors();
-	// }, []);
 	useEffect(() => {
 		setAuthorList(authors);
 	}, [authors]);
@@ -189,7 +187,7 @@ export const CreateCourse = (props) => {
 			}),
 			id: uuidv4(),
 		};
-		store.dispatch(createCourseAction(newCourse));
+		store.dispatch(createNewCourse(newCourse));
 		console.log(courses);
 	}
 	function handleSubmit(e) {

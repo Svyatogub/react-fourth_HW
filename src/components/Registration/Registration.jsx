@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+// import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
 
 import Input from '../../common/Input/Input';
 import Button from '../../common/Button/Button';
 
 import './registrationStyle.css';
+import { registerUser } from '../../store/users/thunk';
+import { store } from '../../store';
 
 export const Registration = () => {
 	const [nameValue, setNameValue] = useState('');
@@ -15,16 +17,19 @@ export const Registration = () => {
 	const navigate = useNavigate();
 	function submitHandler(e) {
 		e.preventDefault();
-		axios
-			.post('http://localhost:4000/register', {
-				name: nameValue,
-				email: emailValue,
-				password: passwordValue,
-			})
-			.then(() => navigate('/login'))
-			.catch(() =>
-				alert('something went wrong, make shure all fields are valid')
-			);
+		const newRegisterUser = {
+			name: nameValue,
+			email: emailValue,
+			password: passwordValue,
+		};
+		store.dispatch(registerUser(newRegisterUser));
+		navigate('/login');
+		// axios
+		// 	.post('http://localhost:4000/register', newRegisterUser)
+		// 	.then(() => navigate('/login'))
+		// 	.catch(() =>
+		// 		alert('something went wrong, make shure all fields are valid')
+		// 	);
 	}
 	return (
 		<div className='registrationBox'>

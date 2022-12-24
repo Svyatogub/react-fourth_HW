@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import { Routes, Route, useNavigate, Navigate } from 'react-router-dom';
 
 import Courses from './components/Courses/Courses';
-import { CreateCourse } from './components/CreateCourse/CreateCourse';
+import { CourseForm } from './components/CourseForm/CourseForm';
 import { Header } from './components/Header/Header';
 import { Login } from './components/Login/Login';
 import { Registration } from './components/Registration/Registration';
@@ -14,19 +14,21 @@ import { CourseInfo } from './components/CourseInfo/CourseInfo';
 import { LOGIN_USER } from './store/users/actionTypes';
 
 import { store } from './store';
-import { getAllAuthors, getAllCourses } from './services';
+import { getAllAuthors } from './store/authors/thunk';
+import { getAllCourses } from './store/courses/thunk';
+import { checkCurrentUser } from './store/users/thunk';
 
 function App() {
 	const [isLogged, setIsLogged] = useState(false);
 	const user = useSelector((state) => state.user);
-	const token = JSON.parse(localStorage.getItem('user'));
+	const token = localStorage.getItem('user');
 
 	const navigate = useNavigate();
 
 	useEffect(() => {
 		tryToLogIn();
-		getAllCourses();
-		getAllAuthors();
+		store.dispatch(getAllCourses());
+		store.dispatch(getAllAuthors());
 	}, []);
 	useEffect(() => {
 		if (user.isAuth) {
@@ -52,13 +54,11 @@ function App() {
 			user = JSON.parse(user);
 		} catch {
 			user = {};
+			console.log(user);
 		}
 		if (user && user.isAuth) {
-			store.dispatch({ type: LOGIN_USER, payload: user });
+			store.dispatch(checkCurrentUser());
 		}
-		// else {
-		// 	// store.dispatch({ type: LOGOUT_USER });
-		// }
 	}
 	return (
 		<div>
@@ -79,7 +79,7 @@ function App() {
 				/>
 				<Route path='/courses'>
 					<Route index element={<Courses />} />
-					<Route path='add' element={<CreateCourse />} />
+					<Route path='add' element={<CourseForm />} />
 					<Route path=':courseId' element={<CourseInfo />} />
 				</Route>
 				<Route

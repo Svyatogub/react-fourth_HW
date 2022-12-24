@@ -6,7 +6,8 @@ import Input from '../../common/Input/Input';
 
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 
-import { logInUser } from '../../services';
+import { store } from '../../store';
+import { logInUser } from '../../store/users/thunk';
 
 import './loginStyle.css';
 
@@ -20,7 +21,8 @@ export const Login = (props) => {
 
 	function submitHandler(e) {
 		e.preventDefault();
-		logInUser(emailValue, passwordValue);
+		store.dispatch(logInUser(emailValue, passwordValue));
+		console.log('da');
 	}
 	useEffect(() => {
 		if (userLogged) {
