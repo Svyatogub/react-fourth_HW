@@ -7,7 +7,7 @@ export const authorsReducer = (state = authorsInitialState, action) => {
 		case SET_AUTHORS:
 			return [...action.payload];
 		case CREATE_AUTHOR:
-			return [...state, action.payload];
+			return [...action.payload];
 		default:
 			return state;
 	}

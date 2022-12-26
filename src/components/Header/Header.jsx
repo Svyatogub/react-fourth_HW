@@ -1,5 +1,5 @@
 import React from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
 import { Logo } from './components/Logo/Logo';
@@ -8,21 +8,25 @@ import Button from '../../common/Button/Button';
 import './headerStyle.css';
 
 import { headerButtonText } from '../../contants';
-import { LOGOUT_USER } from '../../store/users/actionTypes';
+// import { LOGOUT_USER } from '../../store/users/actionTypes';
 
 import { store } from '../../store';
 import { getUserName } from '../../selectors';
+import { logOutUser } from '../../store/users/thunk';
 
-export const Header = (props) => {
+export const Header = () => {
 	let location = useLocation();
+	let navigate = useNavigate();
 	const userName = useSelector(getUserName);
 
 	const noRender =
 		location.pathname === '/register' || location.pathname === '/login';
 
-	// const username = 'Ratmir';
+	function toLogin() {
+		navigate('/login');
+	}
 	function userLogout() {
-		store.dispatch({ type: LOGOUT_USER });
+		store.dispatch(logOutUser(toLogin));
 	}
 	return (
 		<div className='header'>

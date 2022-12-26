@@ -7,5 +7,5 @@ import { getUserRole } from '../../selectors';
 export const PrivateRouter = ({ children }) => {
 	const role = useSelector(getUserRole);
 
-	return role === 'admin' ? children : <Navigate to='courses' />;
+	return role === 'admin' ? children : <Navigate to='/courses' />;
 };

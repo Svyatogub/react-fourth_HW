@@ -24,12 +24,6 @@ export const Registration = () => {
 		};
 		store.dispatch(registerUser(newRegisterUser));
 		navigate('/login');
-		// axios
-		// 	.post('http://localhost:4000/register', newRegisterUser)
-		// 	.then(() => navigate('/login'))
-		// 	.catch(() =>
-		// 		alert('something went wrong, make shure all fields are valid')
-		// 	);
 	}
 	return (
 		<div className='registrationBox'>

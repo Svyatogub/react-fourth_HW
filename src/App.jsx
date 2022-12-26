@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import React, { useEffect } from 'react';
 import { Routes, Route, useNavigate, Navigate } from 'react-router-dom';
 
 import Courses from './components/Courses/Courses';
@@ -11,58 +10,31 @@ import { Registration } from './components/Registration/Registration';
 import './App.css';
 import { CourseInfo } from './components/CourseInfo/CourseInfo';
 
-import { LOGIN_USER } from './store/users/actionTypes';
-
 import { store } from './store';
 import { getAllAuthors } from './store/authors/thunk';
 import { getAllCourses } from './store/courses/thunk';
 import { checkCurrentUser } from './store/users/thunk';
+import { PrivateRouter } from './components/PrivateRouter/PrivateRouter';
 
 function App() {
-	const [isLogged, setIsLogged] = useState(false);
-	const user = useSelector((state) => state.user);
 	const token = localStorage.getItem('user');
 
 	const navigate = useNavigate();
 
 	useEffect(() => {
-		tryToLogIn();
+		if (token) {
+			store.dispatch(checkCurrentUser());
+		} else {
+			navigate('/login');
+		}
 		store.dispatch(getAllCourses());
 		store.dispatch(getAllAuthors());
-	}, []);
-	useEffect(() => {
-		if (user.isAuth) {
-			logInHandler();
-		} else {
-			logOutHandler();
-		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [user]);
-	function logInHandler() {
-		localStorage.setItem('user', JSON.stringify(user));
-		setIsLogged(true);
-		navigate('/courses');
-	}
-	function logOutHandler() {
-		localStorage.removeItem('user');
-		setIsLogged(false);
-		navigate('/login');
-	}
-	function tryToLogIn() {
-		let user = localStorage.getItem('user');
-		try {
-			user = JSON.parse(user);
-		} catch {
-			user = {};
-			console.log(user);
-		}
-		if (user && user.isAuth) {
-			store.dispatch(checkCurrentUser());
-		}
-	}
+	}, []);
+
 	return (
 		<div>
-			<Header isLogedIn={isLogged} logedIn={isLogged} />
+			<Header />
 			<Routes>
 				<Route
 					path='/'
@@ -73,13 +45,26 @@ function App() {
 				<Route path='/registration' element={<Registration />} />
 				<Route
 					path='/login'
-					element={
-						token ? <Navigate to='/courses' /> : <Login login={logInHandler} />
-					}
+					element={token ? <Navigate to='/courses' /> : <Login />}
 				/>
 				<Route path='/courses'>
 					<Route index element={<Courses />} />
-					<Route path='add' element={<CourseForm />} />
+					<Route
+						path='add'
+						element={
+							<PrivateRouter>
+								<CourseForm />
+							</PrivateRouter>
+						}
+					/>
+					<Route
+						path='update/:courseId'
+						element={
+							<PrivateRouter>
+								<CourseForm />
+							</PrivateRouter>
+						}
+					/>
 					<Route path=':courseId' element={<CourseInfo />} />
 				</Route>
 				<Route

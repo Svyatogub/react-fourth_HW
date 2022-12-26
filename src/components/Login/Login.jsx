@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import Button from '../../common/Button/Button';
 import Input from '../../common/Input/Input';
 
-import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 import { store } from '../../store';
 import { logInUser } from '../../store/users/thunk';
@@ -17,17 +17,14 @@ export const Login = (props) => {
 	const [passwordValue, setPasswordValue] = useState('');
 
 	const navigate = useNavigate();
-	let location = useLocation();
 
 	function submitHandler(e) {
 		e.preventDefault();
 		store.dispatch(logInUser(emailValue, passwordValue));
-		console.log('da');
 	}
 	useEffect(() => {
 		if (userLogged) {
 			navigate('/courses');
-			console.log(location);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [userLogged]);

@@ -1,10 +1,13 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
 
 import Button from '../../../../common/Button/Button';
 import {
 	ShowCourseChangeButton,
 	ShowCourseDeleteBtn,
 } from '../../../../common/Button/ShowCourseButton';
+
+import { getUserRole } from '../../../../selectors';
 
 import './courseCardStyle.css';
 
@@ -17,7 +20,10 @@ export const CourseCard = ({
 	Id,
 	ButtonClick,
 	onDelete,
+	toChange,
 }) => {
+	const role = useSelector(getUserRole);
+
 	return (
 		<div className='cardBox'>
 			<div className='cardText'>
@@ -39,8 +45,14 @@ export const CourseCard = ({
 				</div>
 				<div className='buttonsSection'>
 					<Button buttonText={'Show course'} onClick={ButtonClick} />
-					<ShowCourseChangeButton />
-					<ShowCourseDeleteBtn onClick={onDelete} />
+					{role === 'admin' ? (
+						<>
+							<ShowCourseChangeButton onClick={toChange} />
+							<ShowCourseDeleteBtn onClick={onDelete} />
+						</>
+					) : (
+						<></>
+					)}
 				</div>
 			</div>
 		</div>

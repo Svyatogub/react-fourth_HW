@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -11,8 +11,8 @@ import './createCourseStyle.css';
 
 import { refactorDuration } from '../../helpers/pipeDuration';
 import { getCreationDate } from '../../helpers/dateGenerator';
-import { CREATE_AUTHOR } from '../../store/authors/actionTypes';
 import { store } from '../../store';
+import { updateCourse } from '../../store/courses/thunk';
 
 import {
 	createCourseTextInput,
@@ -37,24 +37,45 @@ import {
 
 import { getAuthors, getCourses } from '../../selectors';
 import { createNewCourse } from '../../store/courses/thunk';
+import { createNewAuthor } from '../../store/authors/thunk';
 
 export const CourseForm = (props) => {
-	const [titleVaule, setTitleValue] = useState('');
-	const [descriptionValue, setDescriptionValue] = useState('');
-	const [authorsValue, setAuthorsValue] = useState([]);
-	const [durationValue, setDurationValue] = useState(0);
+	const location = useLocation();
+	const locationObject = location.pathname.split('/');
+
+	// const entity = locationObject[1];
+	const method = locationObject[2];
+
+	const coursesInfo = useSelector(getCourses);
+	const currentCourseId = locationObject[3];
+	const currentCourse = coursesInfo.find((c) => c.id === currentCourseId) || {};
+
+	const [titleVaule, setTitleValue] = useState(currentCourse.title ?? '');
+	const [descriptionValue, setDescriptionValue] = useState(
+		currentCourse.description || ''
+	);
+	const [authorsValue, setAuthorsValue] = useState(currentCourse.authors ?? []);
+	const [durationValue, setDurationValue] = useState(
+		currentCourse.duration ?? 0
+	);
 	const [newAuthorValue, setNewAuthorValue] = useState('');
 
-	const courses = useSelector(getCourses);
+	// const courses = useSelector(getCourses);
 	const authors = useSelector(getAuthors);
-	const [authorList, setAuthorList] = useState(authors);
-
+	const filterUnusedAuthors = () => {
+		return authors.filter((a) => {
+			return !authorsValue.some((av) => av === a.id);
+		});
+	};
+	const [authorList, setAuthorList] = useState(filterUnusedAuthors());
 	useEffect(() => {
-		setAuthorList(authors);
+		setAuthorList(filterUnusedAuthors());
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [authors]);
 	const navigate = useNavigate();
 
-	const mapedAuthors = authorList.map((item) => {
+	const mappedAuthors = authorList.map((item) => {
+		if (!item) return null;
 		return (
 			<div key={item.id} className='createCourseRightAuthors'>
 				<p>{item.name}</p>
@@ -66,6 +87,9 @@ export const CourseForm = (props) => {
 			</div>
 		);
 	});
+	const findAuthorById = (id) => {
+		return authors.find((a) => a.id === id);
+	};
 	return (
 		<div className='createCourseBlock'>
 			<form onSubmit={handleSubmit}>
@@ -93,7 +117,7 @@ export const CourseForm = (props) => {
 							labelId={createCourseTextAreaInputAndLabelId}
 							inputId={createCourseTextAreaInputAndLabelId}
 							placeholderText={createCourseDescriptionPlaceHolder}
-							value={descriptionValue}
+							inputValue={descriptionValue}
 							onChange={(e) => setDescriptionValue(e.target.value)}
 						/>
 					</div>
@@ -135,7 +159,7 @@ export const CourseForm = (props) => {
 					<div className='createCourseRight'>
 						<div>
 							<h3>{createCourseAuthorListH3}</h3>
-							<div>{mapedAuthors}</div>
+							<div>{mappedAuthors}</div>
 						</div>
 						<div>
 							<h3>{createCourseCourseAuthorsH3}</h3>
@@ -144,13 +168,14 @@ export const CourseForm = (props) => {
 									<p>authors list is empty</p>
 								) : (
 									authorsValue.map((item) => {
+										const author = findAuthorById(item);
 										return (
-											<div key={item.id} className='createCourseRightAuthors'>
-												<p>{item.name}</p>
+											<div key={author.id} className='createCourseRightAuthors'>
+												<p>{author.name}</p>
 												<Button
 													buttonText={'Delete author'}
 													className='createCourseRightButtons'
-													onClick={() => deleteCourseAuthor(item.id)}
+													onClick={() => deleteCourseAuthor(author.id)}
 												/>
 											</div>
 										);
@@ -171,8 +196,7 @@ export const CourseForm = (props) => {
 			return;
 		} else {
 			let newAuthor = { name: newAuthorValue, id: uuidv4() };
-			store.dispatch({ type: CREATE_AUTHOR, payload: newAuthor });
-			console.log(authors);
+			store.dispatch(createNewAuthor(newAuthor));
 		}
 	}
 
@@ -182,13 +206,19 @@ export const CourseForm = (props) => {
 			description: descriptionValue,
 			creationDate: getCreationDate(),
 			duration: Number(durationValue),
-			authors: authorsValue.map((course) => {
-				return course.id;
-			}),
+			authors: authorsValue,
 			id: uuidv4(),
 		};
 		store.dispatch(createNewCourse(newCourse));
-		console.log(courses);
+	}
+	function updateCurrentCourse() {
+		let currentCourse = {
+			title: titleVaule,
+			description: descriptionValue,
+			duration: Number(durationValue),
+			authors: authorsValue,
+		};
+		store.dispatch(updateCourse(currentCourse, currentCourseId));
 	}
 	function handleSubmit(e) {
 		e.preventDefault();
@@ -196,28 +226,33 @@ export const CourseForm = (props) => {
 			alert('Please make sure Title, Duration, Description inputs are valid');
 			return;
 		}
-		createCourse();
+		if (method === 'add') {
+			createCourse();
+		} else if (method === 'update') {
+			updateCurrentCourse();
+		}
 		navigate('/courses');
 	}
 	function addCourseAuthor(item) {
 		let newCourseAuthor = authorList.find((i) => {
 			return i.id === item;
 		});
-		setAuthorsValue([newCourseAuthor, ...authorsValue]);
+		setAuthorsValue([newCourseAuthor.id, ...authorsValue]);
 		setAuthorList(
 			authorList.filter((i) => {
+				// debugger;
 				return i.id !== newCourseAuthor.id;
 			})
 		);
 	}
 	function deleteCourseAuthor(item) {
-		let newCourseAuthor = authorsValue.find((i) => {
-			return i.id === item;
+		let delCourseAuthor = authorsValue.find((i) => {
+			return i === item;
 		});
-		setAuthorList([newCourseAuthor, ...authorList]);
+		setAuthorList([findAuthorById(delCourseAuthor), ...authorList]);
 		setAuthorsValue(
 			authorsValue.filter((i) => {
-				return item !== i.id;
+				return item !== i;
 			})
 		);
 	}

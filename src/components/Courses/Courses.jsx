@@ -14,8 +14,8 @@ import { dataRefactor } from '../../helpers/dateGenerator';
 
 import { refactorDuration } from '../../helpers/pipeDuration';
 import { store } from '../../store';
-import { DELETE_COURSE } from '../../store/courses/actionTypes';
 import { getAuthors, getCourses } from '../../selectors';
+import { deleteCourse } from '../../store/courses/thunk';
 
 const mapAuthorsFromCourse = (c, authors) =>
 	c.authors
@@ -33,7 +33,9 @@ const Courses = (props) => {
 	function toAddCourses() {
 		navigate('/courses/add');
 	}
-
+	function toChangeCourse(ID) {
+		navigate(`/courses/update/${ID}`);
+	}
 	useEffect(() => {
 		setSearchedCourses(courses);
 	}, [courses]);
@@ -57,9 +59,8 @@ const Courses = (props) => {
 							Duration={refactorDuration(list.duration)}
 							CreationDate={dataRefactor(list.creationDate)}
 							ButtonClick={toShowCourse}
-							onDelete={() =>
-								store.dispatch({ type: DELETE_COURSE, payload: list.id })
-							}
+							onDelete={() => store.dispatch(deleteCourse(list.id))}
+							toChange={() => toChangeCourse(list.id)}
 						/>
 					);
 					function toShowCourse() {
@@ -79,11 +80,9 @@ const Courses = (props) => {
 		searchResult.length !== 0
 			? setSearchedCourses(searchResult)
 			: setSearchedCourses(courses);
-		console.log('fincdCourse');
 	}
 	function resetCourses() {
 		setSearchedCourses(courses);
-		console.log('resetCourse');
 	}
 };
 
